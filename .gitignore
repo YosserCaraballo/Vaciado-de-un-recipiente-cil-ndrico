@@ -1,0 +1,11 @@
+# Eliminar el staging actual
+git rm -r --cached .
+```
+
+2. Crea el archivo `.gitignore` en la raíz del proyecto con esto:
+```
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
