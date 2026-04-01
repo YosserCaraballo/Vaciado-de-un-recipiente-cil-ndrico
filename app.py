@@ -330,19 +330,5 @@ st.markdown("""
     <style>
         #MainMenu {visibility: hidden;}
         footer {visibility: hidden;}
-        [data-testid="stHeader"] {
-            height: 0;
-            min-height: 0;
-            padding: 0;
-            overflow: visible;
-        }
-        [data-testid="collapsedControl"] {
-            display: block !important;
-            visibility: visible !important;
-            position: fixed !important;
-            top: 60px !important;
-            left: 14px !important;
-            z-index: 9999 !important;
-        }
     </style>
 """, unsafe_allow_html=True)
