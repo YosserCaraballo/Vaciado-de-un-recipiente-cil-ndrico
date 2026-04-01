@@ -52,8 +52,7 @@ else:
                   14.6,13.3,12.2,11.1,10.1,9.1,8.2,7.4,6.6,5.9,5.3,4.7])
     st.sidebar.warning("Usando datos de prueba")
 
-# Sección 3: Procesamiento de datos 
-# Sección 3: Procesamiento de datos 
+
 st.header("Procesamiento de datos")
 
 # Gráfica de datos crudos
