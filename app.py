@@ -18,7 +18,7 @@ from scipy.stats import pearsonr              # coeficiente de correlación
 # Matemáticas base
 from math import sqrt
 
-# ── Configuración de la página ──────────────────────────────────────────
+# Configuración de la página 
 st.set_page_config(
     page_title="Vaciado de recipiente",
     page_icon="💧",
@@ -26,13 +26,13 @@ st.set_page_config(
     
 )
 
-# ── Título principal ─────────────────────────────────────────────────────
+# Título principal 
 st.title("Vaciado de un recipiente cilíndrico")
 
 st.divider()
 
-# ── Sidebar con los datos experimentales ────────────────────────────────
-# ── Sidebar con carga de datos ───────────────────────────────────────────
+# Sidebar con los datos experimentales 
+# Sidebar con carga de datos 
 st.sidebar.header("Datos experimentales")
 
 archivo = st.sidebar.file_uploader("Sube tu archivo CSV", type=["csv"])
@@ -52,8 +52,8 @@ else:
                   14.6,13.3,12.2,11.1,10.1,9.1,8.2,7.4,6.6,5.9,5.3,4.7])
     st.sidebar.warning("Usando datos de prueba")
 
-# ── Sección 3: Procesamiento de datos ───────────────────────────────────
-# ── Sección 3: Procesamiento de datos ───────────────────────────────────
+# Sección 3: Procesamiento de datos 
+# Sección 3: Procesamiento de datos 
 st.header("Procesamiento de datos")
 
 # Gráfica de datos crudos
@@ -147,7 +147,7 @@ with tab2:
 with tab3:
     st.subheader("Regresión exponencial no lineal")
 
-    # Modelo exponencial: h = a * exp(b * t)
+    # Modelo exponencial
     def modelo_exp(t, a, b):
         return a * np.exp(b * t)
 
@@ -180,8 +180,8 @@ with tab3:
 
 st.divider()
 
-# ── Sección 4: Interpolación de Lagrange ────────────────────────────────
-# ── Sección 4: Interpolación de Lagrange ────────────────────────────────
+# Seccion 4: Interpolacion de Lagrange 
+# Seccion 4: Interpolacion de Lagrange
 st.header("Interpolación de Lagrange")
 
 # Función de Lagrange
@@ -282,7 +282,7 @@ for i, (tab, (h_interp, h_curva, et, et_prom, et_std)) in enumerate(zip(tabs_int
 
 st.divider()
 
-# ── Comparación de todos los grados ─────────────────────────────────────
+# Comparacion de todos los grados
 st.subheader("Comparación de interpolaciones")
 
 fig_comp = go.Figure()
@@ -325,7 +325,7 @@ tabla = pd.DataFrame({
 })
 st.dataframe(tabla, use_container_width=True)
 
-# Ocultar menú y footer de Streamlit
+# Ocultar menú y footer de Streamlit y asignnando estilos
 st.markdown("""
     <style>
         #MainMenu {visibility: hidden;}
