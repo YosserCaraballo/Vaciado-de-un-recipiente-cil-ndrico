@@ -39,8 +39,8 @@ archivo = st.sidebar.file_uploader("Sube tu archivo CSV", type=["csv"])
 
 if archivo is not None:
     df = pd.read_csv(archivo, sep=";", decimal=",")
-    t = df["tiempo"].values
-    h = df["altura"].values
+    t = df["Tiempo"].values
+    h = df["Altura"].values
     st.sidebar.success(f"{len(t)} datos cargados correctamente")
     st.sidebar.dataframe(df)
 else:
