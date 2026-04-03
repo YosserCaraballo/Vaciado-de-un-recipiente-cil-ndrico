@@ -38,7 +38,7 @@ st.sidebar.header("Datos experimentales")
 archivo = st.sidebar.file_uploader("Sube tu archivo CSV", type=["csv"])
 
 if archivo is not None:
-    df = pd.read_csv(archivo)
+    df = pd.read_csv(archivo, sep=";", decimal=",")
     t = df["tiempo"].values
     h = df["altura"].values
     st.sidebar.success(f"{len(t)} datos cargados correctamente")
