@@ -39,38 +39,42 @@ archivo = st.sidebar.file_uploader("Sube tu archivo CSV", type=["csv"])
 
 if archivo is not None:
     df = pd.read_csv(archivo, sep=";", decimal=",")
-    t = df["Tiempo"].values
+    t = df["Tiempo"].values  # convierte en columna en un array de  numpy para trabajar con ella
     h = df["Altura"].values
     st.sidebar.success(f"{len(t)} datos cargados correctamente")
-    st.sidebar.dataframe(df)
+    st.sidebar.dataframe(df) # muestra los datos de la tabla de exel 
 else:
     st.sidebar.info("Sube un archivo CSV con columnas: tiempo, altura")
     # Datos de prueba mientras no hay experimento
+    # creamos un array de numpy y con dtype forzamos que sean valores de ese tipo en este caso flotante
     t = np.array([0,10,20,30,40,50,60,70,80,90,100,
                   110,120,130,140,150,160,170,180,190,200], dtype=float)
     h = np.array([30.0,27.8,25.8,23.9,22.1,20.4,18.8,17.3,15.9,
                   14.6,13.3,12.2,11.1,10.1,9.1,8.2,7.4,6.6,5.9,5.3,4.7])
-    st.sidebar.warning("Usando datos de prueba")
+    st.sidebar.warning("Usando datos de prueba") # aviso
 
 
 st.header("Procesamiento de datos")
 
-# Gráfica de datos crudos
+# Gráfica de datos 
 st.subheader("Datos experimentales")
-fig_datos = go.Figure()
+fig_datos = go.Figure() # crea figura vacia una hoja en blanco
+# trace es una capa de datos y se puede repsentar de muchas maneras
+# en este caso se usa para aagregar puntos
 fig_datos.add_trace(go.Scatter(
     x=t, y=h,
-    mode="markers",
+    mode="markers", # solo puntos
     name="Datos experimentales",
     marker=dict(color="cyan", size=8)
 ))
-fig_datos.update_layout(
+#aqui agregamos el titulo y los estilos de la figura
+fig_datos.update_layout( 
     title="Altura vs Tiempo — Datos experimentales",
     xaxis_title="Tiempo (s)",
     yaxis_title="Altura (cm)",
-    template="plotly_dark"
+    template="plotly_dark" # fondo negro
 )
-st.plotly_chart(fig_datos, use_container_width=True)
+st.plotly_chart(fig_datos, use_container_width=True) # renderiza o muestra el fig_datos
 
 st.subheader("Ajuste de curvas")
 tab1, tab2, tab3 = st.tabs(["Regresión lineal", "Regresión polinomial", "Regresión exponencial"])
@@ -79,21 +83,21 @@ with tab1:
     st.subheader("Regresión lineal")
 
     # Cálculo
-    coef = np.polyfit(t, h, 1)
-    h_lin = np.polyval(coef, t)
+    coef = np.polyfit(t, h, 1) # funcion de coeficientes
+    h_lin = np.polyval(coef, t)  # evaluamos el polimonio en cada punto
 
     # Estadísticos
     n = len(t)
     h_mean = np.mean(h)
-    St = np.sum((h - h_mean)**2)
+    St = np.sum((h - h_mean)**2) # desviacion estandar
     Sr = np.sum((h - h_lin)**2)
-    r2 = 1 - Sr/St
+    r2 = 1 - Sr/St  # coeficiente de determinacion
 
     # r con signo correcto usando pearsonr
-    r, _ = pearsonr(t, h)
+    r, _ = pearsonr(t, h) # -1 a 1
 
-    Sy = np.sqrt(St/(n-1))
-    Syx = np.sqrt(Sr/(n-2))
+    Sy = np.sqrt(St/(n-1)) # desvaicion de los datos
+    Syx = np.sqrt(Sr/(n-2)) # error estandar
 
     # Gráfica
     fig1 = go.Figure()
@@ -117,8 +121,8 @@ with tab2:
     st.subheader("Regresión polinomial grado 2")
 
     # Cálculo
-    coef2 = np.polyfit(t, h, 2)
-    h_pol = np.polyval(coef2, t)
+    coef2 = np.polyfit(t, h, 2) # funcion de coeficientes
+    h_pol = np.polyval(coef2, t) # evaluamos el polimonio en cada punto
 
     Sr2 = np.sum((h - h_pol)**2)
     r2_pol = 1 - Sr2/St
@@ -150,6 +154,10 @@ with tab3:
     def modelo_exp(t, a, b):
         return a * np.exp(b * t)
 
+    # para encontrar los vamlores de a y b que mas se ajusten a los datos
+    #p0 = valores iniciales
+    # max fev = valor maximo de iteraciones
+    # *popt es el array de los valores a y b encontrados
     popt, _ = curve_fit(modelo_exp, t, h, p0=[30, -0.01], maxfev=5000)
     h_exp = modelo_exp(t, *popt)
 
