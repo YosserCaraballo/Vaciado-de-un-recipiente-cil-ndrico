@@ -230,7 +230,7 @@ with tab4:
         "Syx":     [f"{Syx:.4f}",    f"{Syx2:.4f}",    f"{Syx3:.4f}"],
         "Sr":      [f"{Sr:.4f}",     f"{Sr2:.4f}",     f"{Sr3:.4f}"],
     })
-    st.dataframe(tabla_reg, use_container_width=True)
+    st.dataframe(tabla_reg, use_container_width=True, hide_index=True)
 
     # Gráfica comparativa superpuesta
     st.subheader("Gráfica comparativa")
@@ -267,8 +267,8 @@ with tab4:
 
 st.divider()
 
-# Seccion 4: Interpolacion de Lagrange 
-# Seccion 4: Interpolacion de Lagrange
+
+
 st.header("Interpolación de Lagrange")
 
 # Función de Lagrange
@@ -309,8 +309,9 @@ g3 = calcular_grado(3)
 g4 = calcular_grado(4)
 grados = [g1, g2, g3, g4]
 
-tab4, tab5, tab6, tab7 = st.tabs(["Lineal", "Cuadrática", "Cúbica", "Cuártica"])
-tabs_interp = [tab4, tab5, tab6, tab7]
+
+itab1, itab2, itab3, itab4 = st.tabs(["Lineal", "Cuadrática", "Cúbica", "Cuártica"])
+tabs_interp = [itab1, itab2, itab3, itab4]
 nombres = ["Lineal", "Cuadrática", "Cúbica", "Cuártica"]
 
 formulas = [
@@ -410,7 +411,7 @@ tabla = pd.DataFrame({
     "εt% promedio": [f"{g[3]:.4f}%" for g in grados],
     "Desv. estándar εt%": [f"{g[4]:.4f}%" for g in grados]
 })
-st.dataframe(tabla, use_container_width=True)
+st.dataframe(tabla, use_container_width=True, hide_index=True)
 
 
 st.subheader("Modelo teórico de Torricelli")
@@ -469,11 +470,6 @@ st.subheader("Comparación: Modelo teórico vs Interpolación Cúbica")
 # Interpolación cubica en t_teorico 
 h_cubica_curva = np.array([lagrange_interp(t, h, ti, 3) for ti in t_teorico])
 
-# Interpolación cubica en t 
-h_cubica_en_t = np.array([lagrange_interp(t, h, ti, 3) for ti in t])
-
-# Modelo teorico en los puntos experimentales 
-h_teorico_en_t = (np.sqrt(h0) - k * t)**2 * 100
 
 # Grafica comparativa
 fig_comp_teorico = go.Figure()
@@ -503,13 +499,8 @@ fig_comp_teorico.update_layout(
 )
 st.plotly_chart(fig_comp_teorico, use_container_width=True)
 
-# Error relativo entre modelo teórico y cúbica en puntos experimentales
-with np.errstate(divide='ignore', invalid='ignore'):
-    error_teo_vs_cubica = np.where(
-        h_teorico_en_t != 0,
-        np.abs((h_teorico_en_t - h_cubica_en_t) / h_teorico_en_t) * 100,
-        0
-    )
+
+
 
 
 
