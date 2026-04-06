@@ -77,7 +77,7 @@ fig_datos.update_layout(
 st.plotly_chart(fig_datos, use_container_width=True) # renderiza o muestra el fig_datos
 
 st.subheader("Ajuste de curvas")
-tab1, tab2, tab3 = st.tabs(["Regresión lineal", "Regresión polinomial", "Regresión exponencial"])
+tab1, tab2, tab3,tab4 = st.tabs(["Regresión lineal", "Regresión polinomial", "Regresión exponencial","Comparación"])
 
 with tab1:
     st.subheader("Regresión lineal")
@@ -214,6 +214,54 @@ with tab3:
     st.metric("Sr (suma de residuos)", f"{Sr3:.4f}")
     col3.metric("Sy (desv. est. total)", f"{Sy:.4f}")
     col4.metric("Syx (error estándar)", f"{Syx3:.4f}")
+with tab4:
+    st.subheader("Tabla comparativa de regresiones")
+
+    tabla_reg = pd.DataFrame({
+        "Modelo": ["Lineal", "Polinomial grado 2", "Exponencial"],
+        "Ecuación": [
+            f"h = {coef[0]:.4f}t + {coef[1]:.4f}",
+            f"h = {coef2[0]:.6f}t² + {coef2[1]:.4f}t + {coef2[2]:.4f}",
+            f"h = {popt[0]:.4f}·e^({popt[1]:.6f}·t)"
+        ],
+        "R²":      [f"{r2:.4f}",     f"{r2_pol:.4f}",  f"{r2_exp:.4f}"],
+        "r":       [f"{r:.4f}",      f"{r_pol:.4f}",   f"{r_exp:.4f}"],
+        "Sy":      [f"{Sy:.4f}",     f"{Sy:.4f}",      f"{Sy:.4f}"],
+        "Syx":     [f"{Syx:.4f}",    f"{Syx2:.4f}",    f"{Syx3:.4f}"],
+        "Sr":      [f"{Sr:.4f}",     f"{Sr2:.4f}",     f"{Sr3:.4f}"],
+    })
+    st.dataframe(tabla_reg, use_container_width=True)
+
+    # Gráfica comparativa superpuesta
+    st.subheader("Gráfica comparativa")
+    fig_comp_reg = go.Figure()
+    fig_comp_reg.add_trace(go.Scatter(
+        x=t, y=h, mode="markers",
+        name="Datos experimentales",
+        marker=dict(color="cyan", size=8)
+    ))
+    fig_comp_reg.add_trace(go.Scatter(
+        x=t, y=h_lin, mode="lines",
+        name="Lineal",
+        line=dict(color="red", width=2)
+    ))
+    fig_comp_reg.add_trace(go.Scatter(
+        x=t, y=h_pol, mode="lines",
+        name="Polinomial grado 2",
+        line=dict(color="orange", width=2)
+    ))
+    fig_comp_reg.add_trace(go.Scatter(
+        x=t, y=h_exp, mode="lines",
+        name="Exponencial",
+        line=dict(color="lime", width=2)
+    ))
+    fig_comp_reg.update_layout(
+        title="Comparación de regresiones — Lineal, Polinomial y Exponencial",
+        xaxis=dict(title=dict(text="Tiempo (s)")),
+        yaxis=dict(title=dict(text="Altura (cm)")),
+        template="plotly_dark"
+    )
+    st.plotly_chart(fig_comp_reg, use_container_width=True)
 
     
 
@@ -413,6 +461,81 @@ col1.metric("k", f"{k:.6f}")
 col2.metric("AT (m²)", f"{AT:.6f}")
 col3.metric("Ao (m²)", f"{Ao:.8f}")
 
+st.subheader("Comparación: Modelo teórico vs Interpolación Cuártica")
+
+# Interpolación cuártica evaluada en t_teorico para comparar
+h_cuartica_comp = np.array([lagrange_interp(t, h, ti, 4) for ti in t_teorico])
+h_cuartica_comp_m = h_cuartica_comp / 100  # convertir cm a metros
+
+fig_comp_teorico = go.Figure()
+
+# Modelo teórico Torricelli
+fig_comp_teorico.add_trace(go.Scatter(
+    x=t_teorico,
+    y=h_teorico_cm,
+    mode="lines",
+    name="Modelo teórico Torricelli",
+    line=dict(color="cyan", width=2)
+))
+
+# Interpolación cuártica
+fig_comp_teorico.add_trace(go.Scatter(
+    x=t_teorico,
+    y=h_cuartica_comp,
+    mode="lines",
+    name="Interpolación Cuártica",
+    line=dict(color="violet", width=2, dash="dash")
+))
+
+# Datos experimentales
+fig_comp_teorico.add_trace(go.Scatter(
+    x=t,
+    y=h,
+    mode="markers",
+    name="Datos experimentales",
+    marker=dict(color="yellow", size=8)
+))
+
+fig_comp_teorico.update_layout(
+    title="Comparación: Modelo teórico de Torricelli vs Interpolación Cuártica",
+    xaxis=dict(title=dict(text="Tiempo (s)")),
+    yaxis=dict(title=dict(text="Altura (cm)")),
+    template="plotly_dark"
+)
+st.plotly_chart(fig_comp_teorico, use_container_width=True)
+
+# Error entre modelo teórico y cuártica
+h_teorico_en_t = (np.sqrt(h0) - k * t)**2 * 100  # modelo en los puntos experimentales
+with np.errstate(divide='ignore', invalid='ignore'):
+    error_teo_vs_cuartica = np.where(
+        h_teorico_en_t != 0,
+        np.abs((h_teorico_en_t - g4[0]) / h_teorico_en_t) * 100,
+        0
+    )
+
+fig_error_comp = go.Figure()
+fig_error_comp.add_trace(go.Scatter(
+    x=t,
+    y=error_teo_vs_cuartica,
+    mode="lines+markers",
+    name="Error teórico vs Cuártica",
+    line=dict(color="orange", width=2),
+    marker=dict(size=6)
+))
+fig_error_comp.update_layout(
+    title="Error relativo % — Modelo teórico vs Interpolación Cuártica",
+    xaxis=dict(title=dict(text="Tiempo (s)")),
+    yaxis=dict(title=dict(text="εt%")),
+    template="plotly_dark"
+)
+st.plotly_chart(fig_error_comp, use_container_width=True)
+
+# Métricas
+error_prom = np.mean(error_teo_vs_cuartica)
+error_std  = np.std(error_teo_vs_cuartica)
+col1, col2 = st.columns(2)
+col1.metric("εt% promedio (teórico vs cuártica)", f"{error_prom:.4f}%")
+col2.metric("Desv. estándar εt%", f"{error_std:.4f}%")
 
 
 # Ocultar menú y footer de Streamlit y asignnando estilos
