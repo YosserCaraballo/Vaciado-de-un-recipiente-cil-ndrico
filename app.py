@@ -81,6 +81,15 @@ tab1, tab2, tab3 = st.tabs(["Regresión lineal", "Regresión polinomial", "Regre
 
 with tab1:
     st.subheader("Regresión lineal")
+    with st.expander("Ver fórmulas"):
+        st.markdown("**Modelo:**")
+        st.latex(r"h(t) = a_1 \cdot t + a_0")
+        st.markdown("**Coeficientes por mínimos cuadrados:**")
+        st.latex(r"a_1 = \frac{n\sum t_i h_i - \sum t_i \sum h_i}{n\sum t_i^2 - (\sum t_i)^2}")
+        st.latex(r"a_0 = \bar{h} - a_1 \bar{t}")
+        st.markdown("**Estadísticos:**")
+        st.latex(r"R^2 = 1 - \frac{S_r}{S_t} \quad S_t = \sum(h_i - \bar{h})^2 \quad S_r = \sum(h_i - \hat{h}_i)^2")
+        st.latex(r"S_y = \sqrt{\frac{S_t}{n-1}} \qquad S_{y/x} = \sqrt{\frac{S_r}{n-2}}")
 
     # Cálculo
     coef = np.polyfit(t, h, 1) # funcion de coeficientes
@@ -118,7 +127,15 @@ with tab1:
     st.info(f"Ecuación: h(t) = {coef[0]:.4f} · t + {coef[1]:.4f}")
 
 with tab2:
+    
     st.subheader("Regresión polinomial grado 2")
+    with st.expander("Ver fórmulas"):
+        st.markdown("**Modelo:**")
+        st.latex(r"h(t) = a_2 t^2 + a_1 t + a_0")
+        st.markdown("**Coeficientes por mínimos cuadrados:**")
+        st.latex(r"\begin{bmatrix} a_0 \\ a_1 \\ a_2 \end{bmatrix} = (X^T X)^{-1} X^T h")
+        st.markdown("**Estadísticos:**")
+        st.latex(r"R^2 = 1 - \frac{S_r}{S_t} \qquad S_{y/x} = \sqrt{\frac{S_r}{n-3}}")
 
     # Cálculo
     coef2 = np.polyfit(t, h, 2) # funcion de coeficientes
@@ -149,6 +166,16 @@ with tab2:
     
 with tab3:
     st.subheader("Regresión exponencial no lineal")
+    
+    with st.expander("Ver fórmulas"):
+        st.markdown("**Modelo:**")
+        st.latex(r"h(t) = a \cdot e^{b \cdot t}")
+        st.markdown("**Linealización:**")
+        st.latex(r"\ln(h) = \ln(a) + b \cdot t")
+        st.markdown("**Ajuste por curve_fit (Levenberg-Marquardt):**")
+        st.latex(r"\min_{a,b} \sum_{i=1}^{n} \left( h_i - a \cdot e^{b t_i} \right)^2")
+        st.markdown("**Estadísticos:**")
+        st.latex(r"R^2 = 1 - \frac{S_r}{S_t} \qquad S_{y/x} = \sqrt{\frac{S_r}{n-2}}")
 
     # Modelo exponencial
     def modelo_exp(t, a, b):
