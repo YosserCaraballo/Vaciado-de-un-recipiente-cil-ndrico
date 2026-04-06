@@ -511,35 +511,7 @@ with np.errstate(divide='ignore', invalid='ignore'):
         0
     )
 
-# Grafica del error
-fig_error_comp = go.Figure()
-fig_error_comp.add_trace(go.Scatter(
-    x=t, y=error_teo_vs_cubica,
-    mode="lines+markers",
-    name="Error teórico vs Cúbica",
-    line=dict(color="orange", width=2),
-    marker=dict(size=6)
-))
-fig_error_comp.add_hline(
-    y=np.mean(error_teo_vs_cubica),
-    line_dash="dash",
-    line_color="white",
-    annotation_text=f"Promedio: {np.mean(error_teo_vs_cubica):.2f}%"
-)
-fig_error_comp.update_layout(
-    title="Error relativo % — Modelo teórico vs Interpolación Cúbica",
-    xaxis=dict(title=dict(text="Tiempo (s)")),
-    yaxis=dict(title=dict(text="εt%")),
-    template="plotly_dark"
-)
-st.plotly_chart(fig_error_comp, use_container_width=True)
 
-# Metricas
-error_prom = np.mean(error_teo_vs_cubica)
-error_std  = np.std(error_teo_vs_cubica)
-col1, col2 = st.columns(2)
-col1.metric("εt% promedio (teórico vs cúbica)", f"{error_prom:.4f}%")
-col2.metric("Desv. estándar εt%", f"{error_std:.4f}%")
 
 
 # Ocultar menu y footer de Streamlit y asignnando estilos
