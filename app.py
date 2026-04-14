@@ -274,7 +274,7 @@ st.divider()
 st.header("Interpolación de Lagrange")
 
 # Función de Lagrange
-# Datos reales del experimento (en metros, como en el Excel)
+
 # Datos experimentales reales del Excel
 t_exp = np.array([0, 5.15, 10.16, 15.4, 20.8, 25.18, 30, 35.15, 40.13,
                   45.16, 50.11, 55.14, 59.98, 65, 70.18, 75.06, 80.09,
@@ -490,7 +490,7 @@ g  = 9.8
 h0 = 9 / 100
 
 AT = (np.pi * (0.06)**2) /2
-Ao = (np.pi * (0.0012)**2) /2
+Ao = (np.pi * (0.0010)**2) /2
 
 # Constante k
 k = (Cd * Ao * np.sqrt(2 * g)) / (2 * AT)
