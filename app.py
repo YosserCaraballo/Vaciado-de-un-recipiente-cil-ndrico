@@ -485,7 +485,7 @@ with st.expander("Ver fórmula del modelo teórico"):
     st.latex(r"A_T = \frac{\pi d_T^2}{4} \qquad A_o = \frac{\pi d_o^2}{4}")
 
 # Parámetros físicos
-Cd = 0.3
+Cd = 0.8
 g  = 9.8
 h0 = 9 / 100
 
