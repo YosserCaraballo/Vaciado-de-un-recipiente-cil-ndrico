@@ -340,7 +340,7 @@ def calcular_interpolacion(idx_list, vecinos_list):
     for idx, vec in zip(idx_list, vecinos_list):
         h_real = h_exp_m[idx]
         h_p = lagrange_con_vecinos(t_exp, h_exp_m, t_exp[idx], vec)
-        et = abs((h_real - h_p) / h_real) * 100 if h_real != 0 else 0
+        et = (h_real - h_p) / h_real * 100 if h_real != 0 else 0
         h_pred.append(h_p)
         et_list.append(et)
     et_arr = np.array(et_list)
@@ -373,7 +373,7 @@ for i, (tab, (h_pred, et_arr, et_prom, et_std)) in enumerate(zip(tabs_interp, re
             st.markdown("**Polinomio de Lagrange:**")
             st.latex(formulas[i])
             st.markdown("**Error relativo porcentual:**")
-            st.latex(r"\varepsilon_t \% = \left| \frac{f(x_i) - P_n(x_i)}{f(x_i)} \right| \times 100")
+            st.latex(r"\varepsilon_t \% = \frac{f(x_i) - P_n(x_i)}{f(x_i)} \times 100")
             st.markdown("**Error promedio:**")
             st.latex(r"\varepsilon_t \%_{promedio} = \frac{1}{n} \sum_{i=1}^{n} \varepsilon_t \%_i")
 
